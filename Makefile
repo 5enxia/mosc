@@ -1,2 +1,6 @@
-build: main.c
-	clang main.c -o mosc
+server: server.c
+	clang server.c -o server
+
+client: client.c
+	clang client.c -o client
+
