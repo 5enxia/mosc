@@ -18,13 +18,13 @@ int main(int argc, const char *argv[])
 
     int serverSocket, clientSocket;
     struct sockaddr_in serverSocketAddress, clientSocketAddress;
-    unsigned short serverPort;
+    unsigned short serverPortNumber;
     unsigned int clientAddressLength;
 
     if (argc != 2) die("Argument count is mismatch");
 
-    serverPort = (unsigned short)atoi(argv[1]);
-    if (!serverPort) die("Invalid port number");
+    serverPortNumber = (unsigned short)atoi(argv[1]);
+    if (!serverPortNumber) die("Invalid port number");
 
     serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (serverSocket < 0) die("socket() failed");
@@ -32,7 +32,7 @@ int main(int argc, const char *argv[])
     memset(&serverSocketAddress, 0, sizeof(serverSocketAddress));
     serverSocketAddress.sin_family = AF_INET;
     serverSocketAddress.sin_addr.s_addr = htonl(INADDR_ANY);
-    serverSocketAddress.sin_port = htons(serverPort);
+    serverSocketAddress.sin_port = htons(serverPortNumber);
     
     err = bind(serverSocket, (struct sockaddr *)&serverSocketAddress, sizeof(serverSocketAddress));
     if (err < 0) die("bind() failed");
