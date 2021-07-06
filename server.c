@@ -16,38 +16,38 @@ int main(int argc, const char *argv[])
 {
     int err;
 
-    int serverSock, clientSock;
-    struct sockaddr_in serverSockAddr, clientSockAddr;
-    unsigned short serverPort;
-    unsigned int clientAddrLen;
+    int serverSocket, clientSocket;
+    struct sockaddr_in serverSocketAddress, clientSocketAddress;
+    unsigned short serverPortNumber;
+    unsigned int clientAddressLength;
 
     if (argc != 2) die("Argument count is mismatch");
 
-    serverPort = (unsigned short)atoi(argv[1]);
-    if (!serverPort) die("Invalid port number");
+    serverPortNumber = (unsigned short)atoi(argv[1]);
+    if (!serverPortNumber) die("Invalid port number");
 
-    serverSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (serverSock < 0) die("socket() failed");
+    serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (serverSocket < 0) die("socket() failed");
 
-    memset(&serverSockAddr, 0, sizeof(serverSockAddr));
-    serverSockAddr.sin_family = AF_INET;
-    serverSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serverSockAddr.sin_port = htons(serverPort);
+    memset(&serverSocketAddress, 0, sizeof(serverSocketAddress));
+    serverSocketAddress.sin_family = AF_INET;
+    serverSocketAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+    serverSocketAddress.sin_port = htons(serverPortNumber);
     
-    err = bind(serverSock, (struct sockaddr *)&serverSockAddr, sizeof(serverSockAddr));
+    err = bind(serverSocket, (struct sockaddr *)&serverSocketAddress, sizeof(serverSocketAddress));
     if (err < 0) die("bind() failed");
 
-    err = listen(serverSock, LIMIT_OF_QUEUE);
+    err = listen(serverSocket, LIMIT_OF_QUEUE);
     if (err < 0) die("listen() failed");
 
     while (1)
     {
-        clientAddrLen = sizeof(clientSockAddr);
-        clientSock = accept(serverSock, (struct sockaddr *)&clientSockAddr, &clientAddrLen); 
-        if (clientSock < 0) die("accept() failed");
+        clientAddressLength = sizeof(clientSocketAddress);
+        clientSocket = accept(serverSocket, (struct sockaddr *)&clientSocketAddress, &clientAddressLength); 
+        if (clientSocket < 0) die("accept() failed");
 
-        printf("Connected from %s\n", inet_ntoa(clientSockAddr.sin_addr));
-        close(clientSock);
+        printf("Connected from %s\n", inet_ntoa(clientSocketAddress.sin_addr));
+        close(clientSocket);
     }
 
     return EXIT_SUCCESS;
