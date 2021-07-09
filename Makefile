@@ -1,6 +1,6 @@
-server: server.c
+s: server.c
 	gcc server.c -o server
 
-client: client.c
+c: client.c
 	gcc client.c -o client
 
