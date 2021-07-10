@@ -2,3 +2,4 @@ mosc
 server
 client
 .vscode
+*.js
