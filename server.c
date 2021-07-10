@@ -5,12 +5,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#define LIMIT_OF_QUEUE 5
+#include "pkg/http.h"
+// #include "pkg/err.h"
 
-void die(const char *msg) {
-    perror(msg);
-    exit(EXIT_FAILURE);
-}
+#define LIMIT_OF_QUEUE 5
 
 int main(int argc, const char *argv[])
 {
@@ -27,13 +25,13 @@ int main(int argc, const char *argv[])
     if (!serverPortNumber) die("Invalid port number");
 
     serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (serverSocket < 0) die("socket() failed");
+    if (serverSocket < 0) { die("socket() failed"); }
 
     memset(&serverSocketAddress, 0, sizeof(serverSocketAddress));
     serverSocketAddress.sin_family = AF_INET;
     serverSocketAddress.sin_addr.s_addr = htonl(INADDR_ANY);
     serverSocketAddress.sin_port = htons(serverPortNumber);
-    
+
     err = bind(serverSocket, (struct sockaddr *)&serverSocketAddress, sizeof(serverSocketAddress));
     if (err < 0) die("bind() failed");
 
@@ -43,12 +41,15 @@ int main(int argc, const char *argv[])
     while (1)
     {
         clientAddressLength = sizeof(clientSocketAddress);
-        clientSocket = accept(serverSocket, (struct sockaddr *)&clientSocketAddress, &clientAddressLength); 
-        if (clientSocket < 0) die("accept() failed");
-
+        clientSocket = accept(serverSocket,(struct sockaddr *)&clientSocketAddress, &clientAddressLength);
         printf("Connected from %s\n", inet_ntoa(clientSocketAddress.sin_addr));
+        if (clientSocket < 0) die("accept() failed");
+        else {
+            http(clientSocket);
+        }
         close(clientSocket);
     }
+    close(serverSocket);
 
     return EXIT_SUCCESS;
 }

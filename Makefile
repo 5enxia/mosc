@@ -1,6 +1,6 @@
-server: server.c
-	clang server.c -o server
+s: server.c
+	gcc server.c -o server
 
-client: client.c
-	clang client.c -o client
+c: client.c
+	gcc client.c -o client
 
